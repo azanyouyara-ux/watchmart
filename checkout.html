@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — Watchmart</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .checkout-wrap { max-width: 650px; margin: 35px auto; padding: 0 20px; }
+    .checkout-card {
+      background: white; border-radius: 14px;
+      padding: 25px; margin-bottom: 20px; box-shadow: var(--shadow);
+    }
+    .checkout-card h2 {
+      color: var(--primary); font-size: 1.15rem;
+      margin-bottom: 18px; padding-bottom: 10px;
+      border-bottom: 2px solid #f5f5f5;
+    }
+    .form-row { margin-bottom: 15px; }
+    .form-row label {
+      display: block; margin-bottom: 6px;
+      color: #555; font-size: 0.9rem; font-weight: 600;
+    }
+    .form-row input, .form-row textarea, .form-row select {
+      width: 100%; padding: 12px 15px;
+      border: 2px solid #eee; border-radius: 8px;
+      font-size: 0.95rem; outline: none;
+      transition: border 0.2s; font-family: inherit;
+    }
+    .form-row input:focus,
+    .form-row textarea:focus { border-color: var(--accent); }
+    .payment-option {
+      display: flex; align-items: center; gap: 15px;
+      padding: 15px; border: 2px solid #eee;
+      border-radius: 10px; margin-bottom: 12px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .payment-option:hover { border-color: var(--accent); background: #fffdf0; }
+    .payment-option.selected {
+      border-color: var(--accent);
+      background: #fffbee; box-shadow: 0 0 0 3px rgba(240,192,64,0.2);
+    }
+    .payment-option .p-logo {
+      font-size: 1.8rem; width: 45px; text-align: center;
+    }
+    .payment-option .p-info strong { display: block; color: var(--primary); }
+    .payment-option .p-info small { color: #888; font-size: 0.82rem; }
+    .btn-whatsapp {
+      width: 100%; padding: 15px;
+      background: #25D366; color: white;
+      border: none; border-radius: 10px;
+      cursor: pointer; font-size: 1rem; font-weight: bold;
+      margin-bottom: 10px; transition: background 0.2s;
+    }
+    .btn-whatsapp:hover { background: #1ebe5d; }
+    .btn-confirm-payment {
+      width: 100%; padding: 15px;
+      background: var(--primary); color: var(--accent);
+      border: none; border-radius: 10px;
+      cursor: pointer; font-size: 1rem; font-weight: bold;
+      transition: all 0.2s;
+    }
+    .btn-confirm-payment:hover { background: var(--accent); color: var(--primary); }
+    .step-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; background: var(--accent);
+      color: var(--primary); border-radius: 50%; font-weight: bold;
+      font-size: 0.85rem; margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="logo" onclick="location.href='index.html'">⌚ Watch<span>mart</span></div>
+    <span style="color:#aaa; font-size:0.9rem;">Secure Checkout</span>
+  </header>
+
+  <div class="checkout-wrap">
+
+    <!-- STEP 1: Delivery Info -->
+    <div class="checkout-card">
+      <h2><span class="step-number">1</span>Delivery Information</h2>
+      <div class="form-row">
+        <label>Full Name *</label>
+        <input type="text" id="custName" placeholder="Enter your full name">
+      </div>
+      <div class="form-row">
+        <label>WhatsApp Number *</label>
+        <input type="tel" id="custPhone" placeholder="+92-300-0000000">
+      </div>
+      <div class="form-row">
+        <label>City *</label>
+        <input type="text" id="custCity" placeholder="e.g. Karachi, Lahore, Islamabad">
+      </div>
+      <div class="form-row">
+        <label>Complete Delivery Address *</label>
+        <textarea id="custAddress" rows="3"
+                  placeholder="House/Flat number, Street, Area..."></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 2: Order Summary -->
+    <div class="checkout-card">
+      <h2><span class="step-number">2</span>Order Summary</h2>
+      <div id="orderItemsList"></div>
+      <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #f5f5f5;">
+        <div class="summary-row">
+          <span>Subtotal</span><span id="chkSubtotal">PKR 0</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery Charge</span>
+          <span style="color:var(--danger);">PKR 300</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total Payable</span>
+          <span id="chkTotal">PKR 300</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Payment Method -->
+    <div class="checkout-card">
+      <h2><span class="step-number">3</span>Select Payment Method</h2>
+      <p style="color:#666; font-size:0.9rem; margin-bottom:15px;">
+        Send payment first, then share the screenshot on WhatsApp
+      </p>
+
+      <div class="payment-option" onclick="selectPayment('jazzcash')"
+           id="opt-jazzcash">
+        <div class="p-logo">📱</div>
+        <div class="p-info">
+          <strong>JazzCash</strong>
+          <small>Account: 0313-4447817 | Name: Ishrat Nazar</small>
+        </div>
+      </div>
+
+      <div class="payment-option" onclick="selectPayment('easypaisa')"
+           id="opt-easypaisa">
+        <div class="p-logo">💚</div>
+        <div class="p-info">
+          <strong>EasyPaisa</strong>
+          <small>Account: 0313-4447817 | Name: Ishrat Nazar</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: WhatsApp + Confirm -->
+    <div class="checkout-card" id="whatsappCard" style="display:none;">
+      <h2><span class="step-number">4</span>Send Payment Screenshot</h2>
+      <p style="color:#666; font-size:0.9rem; margin-bottom:18px;">
+        After making payment, send your screenshot via WhatsApp. 
+        Then click confirm below.
+      </p>
+      <button class="btn-whatsapp" onclick="openWhatsApp()">
+        <i class="fab fa-whatsapp"></i> Open WhatsApp & Send Screenshot
+      </button>
+      <button class="btn-confirm-payment" onclick="confirmOrder()">
+        ✅ I Have Sent the Payment Screenshot
+      </button>
+      <div id="orderError"
+           style="display:none; color:var(--danger); margin-top:12px;
+                  text-align:center; font-size:0.9rem;">
+        ❌ Please fill all required fields first!
+      </div>
+    </div>
+
+  </div>
+
+ <script type="module" src="js/checkout.js"></script>
+    <script>
+      import { supabase } from './js/supabase-client.js';
+      import { getCart, getCartTotals, clearCart } from './js/cart.js';
+
+    const ADMIN_WHATSAPP = '923140138233'; // ← Change this to admin's number
+    let selectedPayment = '';
+
+    // Render order summary
+    function renderSummary() {
+      const cart = getCart();
+      const { subtotal, total } = getCartTotals();
+
+      if (cart.length === 0) {
+        location.href = 'index.html';
+        return;
+      }
+
+      document.getElementById('orderItemsList').innerHTML =
+        cart.map(item => `
+          <div class="summary-row">
+            <span>${item.name} × ${item.quantity}</span>
+            <span>PKR ${(item.price * item.quantity).toLocaleString()}</span>
+          </div>`).join('');
+
+      document.getElementById('chkSubtotal').textContent =
+        `PKR ${subtotal.toLocaleString()}`;
+      document.getElementById('chkTotal').textContent =
+        `PKR ${total.toLocaleString()}`;
+    }
+
+    // Select payment method
+    window.selectPayment = function (method) {
+      selectedPayment = method;
+      document.querySelectorAll('.payment-option')
+              .forEach(el => el.classList.remove('selected'));
+      document.getElementById(`opt-${method}`).classList.add('selected');
+      document.getElementById('whatsappCard').style.display = 'block';
+      document.getElementById('whatsappCard')
+              .scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // Open WhatsApp with pre-filled message
+    window.openWhatsApp = function () {
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const city = document.getElementById('custCity').value.trim();
+      const address = document.getElementById('custAddress').value.trim();
+
+      if (!name || !phone || !city || !address) {
+        document.getElementById('orderError').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      const cart = getCart();
+      const { subtotal, delivery, total } = getCartTotals();
+
+      const items = cart.map(i =>
+        `• ${i.name} × ${i.quantity} = PKR ${(i.price * i.quantity).toLocaleString()}`
+      ).join('\n');
+
+      const msg = `🛍️ *NEW ORDER — WATCHMART*
+━━━━━━━━━━━━━━━━━━━━
+👤 *Name:* ${name}
+📱 *Phone:* ${phone}
+🏙️ *City:* ${city}
+📍 *Address:* ${address}
+━━━━━━━━━━━━━━━━━━━━
+📦 *Ordered Items:*
+${items}
+━━━━━━━━━━━━━━━━━━━━
+💵 Subtotal: PKR ${subtotal.toLocaleString()}
+🚚 Delivery: PKR ${delivery}
+💰 *TOTAL: PKR ${total.toLocaleString()}*
+━━━━━━━━━━━━━━━━━━━━
+💳 *Payment Via:* ${selectedPayment.toUpperCase()}
+📸 Sending payment screenshot now...`;
+
+      window.open(
+        `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`,
+        '_blank'
+      );
+    };
+
+    // Confirm order → Save to Supabase
+    window.confirmOrder = async function () {
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const city = document.getElementById('custCity').value.trim();
+      const address = document.getElementById('custAddress').value.trim();
+      const errorEl = document.getElementById('orderError');
+
+      if (!name || !phone || !city || !address || !selectedPayment) {
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      errorEl.style.display = 'none';
+
+      const cart = getCart();
+      const { subtotal, delivery, total } = getCartTotals();
+
+      try {
+        const { error } = await supabase.from('orders').insert([{
+          customer_name: name,
+          customer_phone: phone,
+          customer_city: city,
+          customer_address: address,
+          items: cart,
+          subtotal: subtotal,
+          delivery_charge: delivery,
+          total: total,
+          payment_method: selectedPayment,
+          status: 'pending'
+        }]);
+
+        if (error) throw error;
+
+        clearCart();
+        location.href = 'order-success.html';
+
+      } catch (err) {
+        alert('❌ Order could not be placed. Please try again.');
+        console.error(err);
+      }
+    };
+
+    renderSummary();
+  </script>
+
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</body>
+</html>

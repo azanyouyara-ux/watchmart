@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Detail — Watchmart</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ===== PRODUCT DETAIL PAGE STYLES ===== */
+
+    .product-detail-wrap {
+      max-width: 1100px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: #888;
+      margin-bottom: 25px;
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .breadcrumb a:hover { color: var(--accent); }
+
+    /* Main Product Layout */
+    .product-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      background: white;
+      border-radius: 18px;
+      padding: 35px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .product-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        padding: 20px;
+      }
+    }
+
+    /* ===== IMAGE SECTION ===== */
+    .product-image-section { position: relative; }
+
+    .main-image-wrapper {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #f8f8f8;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .main-image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .main-image-wrapper:hover img {
+      transform: scale(1.05);
+    }
+
+    .stock-overlay {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: bold;
+      z-index: 2;
+    }
+
+    .in-stock-tag  { background: #d4edda; color: #155724; }
+    .out-stock-tag { background: #f8d7da; color: #721c24; }
+
+    .gallery-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      cursor: pointer;
+      z-index: 2;
+      font-size: 1.1rem;
+    }
+
+    .gallery-nav.prev { left: 12px; }
+    .gallery-nav.next { right: 12px; }
+
+    /* Thumbnail Images */
+    .thumbnails {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .thumb {
+      width: 65px;
+      height: 65px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid #eee;
+      transition: border-color 0.2s;
+    }
+
+    .thumb.active { border-color: var(--accent); }
+    .thumb:hover  { border-color: var(--primary); }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ===== INFO SECTION ===== */
+    .product-info-section { display: flex; flex-direction: column; }
+
+    .product-detail-name {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+
+    .product-detail-price {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--danger);
+      margin-bottom: 6px;
+    }
+
+    .product-category-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #fff8e1;
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      border: 1px solid rgba(240, 192, 64, 0.8);
+    }
+
+    .price-note {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    /* Star Rating */
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .stars { color: #f0c040; font-size: 1rem; }
+
+    .rating-text {
+      font-size: 0.88rem;
+      color: #888;
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 2px solid #f5f5f5;
+      margin: 20px 0;
+    }
+
+    /* Description */
+    .product-detail-desc {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 25px;
+    }
+
+    /* Features List */
+    .features-list {
+      list-style: none;
+      margin-bottom: 25px;
+    }
+
+    .features-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 0.9rem;
+      color: #555;
+      border-bottom: 1px solid #f5f5f5;
+    }
+
+    .features-list li i {
+      color: var(--success);
+      font-size: 0.85rem;
+      width: 16px;
+    }
+
+    /* Quantity Selector */
+    .qty-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .qty-label {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 0.95rem;
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .qty-btn-detail {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: #f5f5f5;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--primary);
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qty-btn-detail:hover { background: var(--accent); }
+
+    .qty-input {
+      width: 50px;
+      height: 40px;
+      border: none;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: bold;
+      outline: none;
+      color: var(--primary);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .btn-add-to-cart-detail {
+      width: 100%;
+      padding: 15px;
+      background: var(--primary);
+      color: var(--accent);
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-add-to-cart-detail:hover {
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    .btn-buy-now {
+      width: 100%;
+      padding: 15px;
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-buy-now:hover { background: #c0392b; }
+
+    .btn-disabled-detail {
+      width: 100%;
+      padding: 15px;
+      background: #eee;
+      color: #999;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: not-allowed;
+    }
+
+    /* Delivery Info */
+    .delivery-info {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .delivery-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #555;
+    }
+
+    .delivery-row i {
+      color: var(--primary);
+      width: 18px;
+    }
+
+    /* ===== REVIEWS SECTION ===== */
+    .reviews-section {
+      background: white;
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    .reviews-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .reviews-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .overall-rating {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 20px;
+      background: #fffbee;
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      margin-bottom: 25px;
+    }
+
+    .big-rating {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    /* Review Card */
+    .review-card {
+      padding: 18px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+
+    .review-card:last-child { border-bottom: none; }
+
+    .review-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .reviewer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .reviewer-name {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 0.95rem;
+    }
+
+    .review-date {
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    .review-text {
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.7;
+      margin-top: 8px;
+    }
+
+    /* ===== RELATED PRODUCTS ===== */
+    .related-section {
+      margin-bottom: 40px;
+    }
+
+    /* Loading state */
+    .detail-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="logo" onclick="location.href='index.html'">
+      ⌚ Watch<span>mart</span>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search watches..."
+             onkeydown="if(event.key==='Enter')
+               location.href='index.html?q='+this.value">
+      <button onclick="location.href='index.html'">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+    <button class="cart-btn" onclick="location.href='cart.html'">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="product-detail-wrap">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <i class="fas fa-chevron-right" style="font-size:0.7rem;"></i>
+      <a href="index.html">Collection</a>
+      <i class="fas fa-chevron-right" style="font-size:0.7rem;"></i>
+      <span id="breadcrumbName">Loading...</span>
+    </div>
+
+    <!-- Loading State -->
+    <div class="detail-loading" id="detailLoading">
+      <div class="spinner"></div>
+      <p style="color:#888; margin-top:10px;">Loading product...</p>
+    </div>
+
+    <!-- Product Detail (hidden until loaded) -->
+    <div id="productDetailContent" style="display:none;">
+
+      <!-- Main Product Grid -->
+      <div class="product-detail-grid">
+
+        <!-- LEFT: Images -->
+        <div class="product-image-section">
+          <div class="main-image-wrapper">
+            <button class="gallery-nav prev" type="button" onclick="changeGalleryImage(-1)" aria-label="Previous image">‹</button>
+            <button class="gallery-nav next" type="button" onclick="changeGalleryImage(1)" aria-label="Next image">›</button>
+            <img id="mainImage" src="" alt="Product Image"
+                 onerror="this.src='https://via.placeholder.com/500?text=Watch'">
+            <span class="stock-overlay in-stock-tag" id="stockTag">✅ In Stock</span>
+          </div>
+          <div class="thumbnails" id="thumbnails"></div>
+        </div>
+
+        <!-- RIGHT: Info -->
+        <div class="product-info-section">
+          <h1 class="product-detail-name" id="productName">—</h1>
+          <div class="product-category-pill" id="productCategoryChip">Premium Collection</div>
+
+          <div class="product-detail-price" id="productPrice">PKR —</div>
+          <p class="price-note">
+            <i class="fas fa-tag"></i> Inclusive of all taxes
+          </p>
+
+          <!-- Rating -->
+          <div class="rating-row">
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <span class="rating-text">4.5 out of 5 (24 reviews)</span>
+          </div>
+
+          <hr class="divider">
+
+          <!-- Description -->
+          <p class="product-detail-desc" id="productDesc">—</p>
+
+          <!-- Features -->
+          <ul class="features-list">
+            <li>
+              <i class="fas fa-check-circle"></i>
+              Genuine product with warranty
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              Fast delivery across Pakistan
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              Easy 7-day return policy
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              JazzCash & EasyPaisa accepted
+            </li>
+          </ul>
+
+          <hr class="divider">
+
+          <!-- Quantity Selector -->
+          <div class="qty-section">
+            <span class="qty-label">Quantity:</span>
+            <div class="qty-controls">
+              <button class="qty-btn-detail" onclick="changeQty(-1)">−</button>
+              <input type="number" class="qty-input" id="qtyInput"
+                     value="1" min="1" max="10">
+              <button class="qty-btn-detail" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons" id="actionButtons">
+            <!-- Filled by JS -->
+          </div>
+
+          <!-- Delivery Info -->
+          <div class="delivery-info">
+            <div class="delivery-row">
+              <i class="fas fa-truck"></i>
+              <span>
+                <strong>Delivery Charge:</strong> PKR 300 flat
+              </span>
+            </div>
+            <div class="delivery-row">
+              <i class="fas fa-clock"></i>
+              <span>
+                <strong>Delivery Time:</strong> 2-4 working days
+              </span>
+            </div>
+            <div class="delivery-row">
+              <i class="fab fa-whatsapp" style="color:#25D366;"></i>
+              <span>
+                <strong>Order via WhatsApp</strong> after checkout
+              </span>
+            </div>
+            <div class="delivery-row">
+              <i class="fas fa-undo"></i>
+              <span>
+                <strong>Returns:</strong> 7 days easy return
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===== REVIEWS SECTION ===== -->
+      <div class="reviews-section">
+        <div class="reviews-header">
+          <h2 class="reviews-title">
+            <i class="fas fa-star" style="color:var(--accent);"></i>
+            Customer Reviews
+          </h2>
+        </div>
+
+        <div class="overall-rating">
+          <div class="big-rating" id="overallRatingValue">0.0</div>
+          <div>
+            <div class="stars" id="overallStars" style="font-size:1.3rem; color:#f0c040;">
+              <i class="far fa-star"></i>
+              <i class="far fa-star"></i>
+              <i class="far fa-star"></i>
+              <i class="far fa-star"></i>
+              <i class="far fa-star"></i>
+            </div>
+            <p id="reviewsSummaryText" style="font-size:0.88rem; color:#666; margin-top:5px;">
+              No published reviews yet.
+            </p>
+          </div>
+        </div>
+
+        <div id="reviewsList"></div>
+      </div>
+
+      <!-- ===== RELATED PRODUCTS ===== -->
+      <div class="related-section">
+        <div class="section-header">
+          <h2 class="section-title">You May Also Like</h2>
+        </div>
+        <div class="products-grid" id="relatedGrid">
+          <!-- Loaded by JS -->
+        </div>
+      </div>
+
+    </div>
+    <!-- End productDetailContent -->
+
+    <!-- Not Found State -->
+    <div id="notFound" style="display:none;">
+      <div class="empty-state" style="background:white; border-radius:18px;
+                                      box-shadow:var(--shadow); padding:80px 20px;">
+        <div class="icon">😔</div>
+        <h3>Product Not Found</h3>
+        <p style="margin:10px 0 25px; color:#888;">
+          This product may have been removed or doesn't exist.
+        </p>
+        <button class="btn-primary" onclick="location.href='index.html'">
+          ← Back to Collection
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <!-- End product-detail-wrap -->
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <p>© 2025 Watchmart | WhatsApp: <a href="#">+92-300-0000000</a></p>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { supabase } from './js/supabase-client.js';
+    import { addToCart, updateCartCount } from './js/cart.js';
+
+    let currentProduct = null;
+    let galleryImages = [];
+    let galleryIndex = 0;
+
+    function getPrimaryGalleryImage(product) {
+      const images = galleryImages.length ? galleryImages : [];
+      return images.length ? images[galleryIndex]?.image_url || images[0]?.image_url : (product.image_url || 'https://via.placeholder.com/500?text=Watch');
+    }
+
+    async function loadProductImages(productId) {
+      try {
+        const { data, error } = await supabase
+          .from('product_images')
+          .select('*')
+          .eq('product_id', productId)
+          .order('sort_order', { ascending: true });
+
+        if (error) throw error;
+
+        galleryImages = data || [];
+        if (!galleryImages.length && currentProduct?.image_url) {
+          galleryImages = [{ product_id: productId, image_url: currentProduct.image_url, is_primary: true, sort_order: 0 }];
+        }
+        galleryIndex = 0;
+      } catch (err) {
+        galleryImages = currentProduct?.image_url ? [{ product_id: productId, image_url: currentProduct.image_url, is_primary: true, sort_order: 0 }] : [];
+        galleryIndex = 0;
+      }
+    }
+
+    async function loadProductReviews(productId) {
+      const reviewsList = document.getElementById('reviewsList');
+      try {
+        const { data, error } = await supabase
+          .from('product_reviews')
+          .select('*')
+          .eq('product_id', productId)
+          .eq('published', true)
+          .order('review_date', { ascending: false });
+
+        if (error) throw error;
+
+        const reviews = data || [];
+        const total = reviews.length;
+        const avg = total ? (reviews.reduce((sum, review) => sum + Number(review.rating || 0), 0) / total).toFixed(1) : '0.0';
+
+        document.getElementById('overallRatingValue').textContent = avg;
+        const summaryText = document.getElementById('reviewsSummaryText');
+        summaryText.textContent = total ? `Based on ${total} published review${total === 1 ? '' : 's'}` : 'No published reviews yet.';
+
+        const starMarkup = [];
+        if (total > 0) {
+          const ratingValue = Number(avg);
+          for (let i = 1; i <= 5; i += 1) {
+            const filled = i <= Math.round(ratingValue) ? 'fas fa-star' : 'far fa-star';
+            starMarkup.push(`<i class="${filled}"></i>`);
+          }
+        } else {
+          starMarkup.push('<i class="far fa-star"></i>');
+          starMarkup.push('<i class="far fa-star"></i>');
+          starMarkup.push('<i class="far fa-star"></i>');
+          starMarkup.push('<i class="far fa-star"></i>');
+          starMarkup.push('<i class="far fa-star"></i>');
+        }
+        document.getElementById('overallStars').innerHTML = starMarkup.join('');
+
+        if (!total) {
+          reviewsList.innerHTML = `
+            <div class="empty-state" style="background:#fff; border-radius:12px; margin-top:12px; padding:28px 18px;">
+              <div class="icon">⭐</div>
+              <h3>No reviews yet</h3>
+              <p>This product has not received any published reviews.</p>
+            </div>`;
+          return;
+        }
+
+        reviewsList.innerHTML = reviews.map((review) => {
+          const initials = (review.reviewer_name || 'A').trim().charAt(0).toUpperCase();
+          const stars = Array.from({ length: 5 }, (_, index) => index < Number(review.rating || 0) ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>').join('');
+          const dateLabel = new Date(review.review_date || review.created_at).toLocaleDateString('en-US', {
+            month: 'long',
+            year: 'numeric'
+          });
+
+          return `
+            <div class="review-card">
+              <div class="review-top">
+                <div class="reviewer-avatar">${initials}</div>
+                <div>
+                  <p class="reviewer-name">${review.reviewer_name || 'Anonymous'}</p>
+                  <p class="review-date">${dateLabel}</p>
+                </div>
+                <div class="stars" style="margin-left:auto; font-size:0.9rem; color:#f0c040;">${stars}</div>
+              </div>
+              <p class="review-text">${(review.review_text || '').replace(/\n/g, '<br>')}</p>
+            </div>`;
+        }).join('');
+      } catch (err) {
+        console.error('Review error:', err);
+        reviewsList.innerHTML = `
+          <div class="empty-state" style="background:#fff; border-radius:12px; margin-top:12px; padding:28px 18px;">
+            <div class="icon">⚠️</div>
+            <h3>Reviews unavailable</h3>
+            <p>The review table is not ready yet. Please run the SQL migration.</p>
+          </div>`;
+      }
+    }
+
+    async function loadProduct() {
+      const productId = localStorage.getItem('watchmart_product_id');
+
+      if (!productId) {
+        location.href = 'index.html';
+        return;
+      }
+
+      try {
+        const { data: product, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('id', productId)
+          .single();
+
+        document.getElementById('detailLoading').style.display = 'none';
+
+        if (error || !product) {
+          document.getElementById('notFound').style.display = 'block';
+          return;
+        }
+
+        currentProduct = product;
+        await loadProductImages(product.id);
+        renderProduct(product);
+        await loadProductReviews(product.id);
+        loadRelatedProducts(product.id);
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('notFound').style.display = 'block';
+      }
+    }
+
+    // =============================================
+    // RENDER PRODUCT
+    // =============================================
+    function renderProduct(product) {
+      document.title = `${product.name} — Watchmart`;
+      document.getElementById('breadcrumbName').textContent = product.name;
+
+      const images = galleryImages.length ? galleryImages.map(item => item.image_url).filter(Boolean) : [product.image_url || 'https://via.placeholder.com/500?text=Watch'];
+      const normalizedImages = [...new Set(images)];
+      galleryImages = normalizedImages.map((imageUrl, index) => ({ image_url: imageUrl, sort_order: index, product_id: product.id }));
+      galleryIndex = 0;
+
+      document.getElementById('mainImage').src = galleryImages[0]?.image_url || 'https://via.placeholder.com/500?text=Watch';
+      const thumbContainer = document.getElementById('thumbnails');
+      thumbContainer.innerHTML = galleryImages.map((image, i) => `
+        <div class="thumb ${i === 0 ? 'active' : ''}"
+             onclick="changMainImage('${String(image.image_url).replace(/'/g, "\\'")}', this)">
+          <img src="${image.image_url}" alt="View ${i + 1}"
+               onerror="this.src='https://via.placeholder.com/65?text=Img'">
+        </div>
+      `).join('');
+
+      const stockTag = document.getElementById('stockTag');
+      if (product.in_stock) {
+        stockTag.textContent = '✅ In Stock';
+        stockTag.className = 'stock-overlay in-stock-tag';
+      } else {
+        stockTag.textContent = '❌ Out of Stock';
+        stockTag.className = 'stock-overlay out-stock-tag';
+      }
+
+      document.getElementById('productCategoryChip').textContent = product.category || 'Premium Collection';
+      document.getElementById('productName').textContent = product.name;
+      document.getElementById('productPrice').textContent = `PKR ${Number(product.price).toLocaleString()}`;
+      document.getElementById('productDesc').textContent =
+        product.description || 'A premium quality watch crafted for style and durability.';
+
+      const actionsEl = document.getElementById('actionButtons');
+      if (product.in_stock) {
+        actionsEl.innerHTML = `
+          <button class="btn-add-to-cart-detail" onclick="handleAddToCart()">
+            <i class="fas fa-shopping-cart"></i> Add to Cart
+          </button>
+          <button class="btn-buy-now" onclick="handleBuyNow()">
+            <i class="fas fa-bolt"></i> Buy Now
+          </button>
+        `;
+      } else {
+        actionsEl.innerHTML = `
+          <button class="btn-disabled-detail" disabled>
+            ❌ Out of Stock
+          </button>
+        `;
+      }
+
+      document.getElementById('productDetailContent').style.display = 'block';
+    }
+
+    window.changMainImage = function (src, thumbEl) {
+      document.getElementById('mainImage').src = src;
+      document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+      thumbEl.classList.add('active');
+    };
+
+    window.changeGalleryImage = function (direction) {
+      if (!galleryImages.length) return;
+      galleryIndex = (galleryIndex + direction + galleryImages.length) % galleryImages.length;
+      const src = galleryImages[galleryIndex].image_url;
+      document.getElementById('mainImage').src = src;
+      document.querySelectorAll('.thumb').forEach((thumb, index) => {
+        thumb.classList.toggle('active', index === galleryIndex);
+      });
+    };
+
+    // =============================================
+    // QUANTITY CONTROL
+    // =============================================
+    window.changeQty = function (change) {
+      const input = document.getElementById('qtyInput');
+      let val = parseInt(input.value) + change;
+      if (val < 1)  val = 1;
+      if (val > 10) val = 10;
+      input.value = val;
+    };
+
+    // =============================================
+    // ADD TO CART
+    // =============================================
+    window.handleAddToCart = function () {
+      if (!currentProduct) return;
+      const qty = parseInt(document.getElementById('qtyInput').value);
+
+      for (let i = 0; i < qty; i++) {
+        addToCart({
+          id:       currentProduct.id,
+          name:     currentProduct.name,
+          price:    Number(currentProduct.price),
+          imageUrl: currentProduct.image_url
+        });
+      }
+
+      showToast(`✅ ${currentProduct.name} (×${qty}) added to cart!`);
+    };
+
+    // =============================================
+    // BUY NOW
+    // =============================================
+    window.handleBuyNow = function () {
+      handleAddToCart();
+      setTimeout(() => location.href = 'cart.html', 500);
+    };
+
+    // =============================================
+    // LOAD RELATED PRODUCTS
+    // =============================================
+    async function loadRelatedProducts(currentId) {
+      const { data: products } = await supabase
+        .from('products')
+        .select('*')
+        .eq('in_stock', true)
+        .neq('id', currentId)
+        .limit(4);
+
+      const grid = document.getElementById('relatedGrid');
+
+      if (!products || products.length === 0) {
+        grid.parentElement.style.display = 'none';
+        return;
+      }
+
+      grid.innerHTML = products.map(p => `
+        <div class="product-card" onclick="goToProduct('${p.id}')">
+          <img src="${p.image_url ||
+            'https://via.placeholder.com/300x200?text=Watch'}"
+               alt="${p.name}"
+               onerror="this.src='https://via.placeholder.com/300x200?text=Watch'">
+          <div class="product-info">
+            <p class="product-name">${p.name}</p>
+            <p class="product-price">PKR ${Number(p.price).toLocaleString()}</p>
+            <button class="btn-add-cart"
+                    onclick="event.stopPropagation();
+                             quickAdd('${p.id}','${p.name}',
+                             ${p.price},'${p.image_url}')">
+              🛒 Add to Cart
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.goToProduct = function (id) {
+      localStorage.setItem('watchmart_product_id', id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      loadProduct();
+    };
+
+    window.quickAdd = function (id, name, price, imageUrl) {
+      addToCart({ id, name, price: Number(price), imageUrl });
+      showToast(`✅ "${name}" added to cart!`);
+    };
+
+    // =============================================
+    // TOAST
+    // =============================================
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // =============================================
+    // INIT
+    // =============================================
+    loadProduct();
+    updateCartCount();
+  </script>
+
+</body>
+</html>

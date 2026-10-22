@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watchmart — Premium Watches in Pakistan</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="logo" onclick="location.href='index.html'">
+      ⌚ Watch<span>mart</span>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search watches...">
+      <button><i class="fas fa-search"></i></button>
+    </div>
+
+    <button class="cart-btn" onclick="location.href='cart.html'">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <h2>⌚ Premium Watches at Best Prices</h2>
+    <p>Authentic timepieces delivered across Pakistan</p>
+    <span class="hero-badge">🚚 Delivery all over pakistan </span>
+  </section>
+
+  <div class="category-nav" id="categoryNav" aria-label="Product categories"></div>
+
+  <!-- ===== PRODUCTS ===== -->
+  <main class="products-section">
+    <div class="section-header">
+      <h2 class="section-title">Our Collection</h2>
+      <span id="productCount" style="color:#666; font-size:0.9rem;"></span>
+    </div>
+
+    <div class="loading-container" id="loading">
+      <div class="spinner"></div>
+      <p>Loading products...</p>
+    </div>
+
+    <div class="products-grid" id="productsGrid"></div>
+
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div class="icon">🔍</div>
+      <h3>No products found</h3>
+      <p>Try a different search term</p>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <p>© 2025 Watchmart | WhatsApp: <a href="#">+92-314-0138233</a></p>
+    <p style="margin-top:8px; font-size:0.85rem;">
+      Premium Watches | Pakistan's Trusted Watch Store
+    </p>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="js/products.js"></script>
+  <script type="module" src="js/cart.js"></script>
+</body>
+</html>
