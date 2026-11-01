@@ -542,6 +542,7 @@ if (document.getElementById('section-dashboard')) {
       if (progress) progress.style.display = 'none';
       alert(`✅ Product ${id ? 'updated' : 'added'} successfully!`);
       window.closeModal();
+      document.getElementById('pImageFiles').value = '';
       await loadAdminProducts();
       await loadStats();
     } catch (err) {
