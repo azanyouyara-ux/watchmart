@@ -953,7 +953,7 @@
         .select('*')
         .eq('in_stock', true)
         .neq('id', currentId)
-        .limit(4);
+        .limit(8);
 
       const grid = document.getElementById('relatedGrid');
 
@@ -998,9 +998,11 @@
     // =============================================
     function showToast(msg) {
       const toast = document.getElementById('toast');
+      if (!toast) return;
       toast.textContent = msg;
       toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
+      clearTimeout(toast._toastTimer);
+      toast._toastTimer = setTimeout(() => toast.classList.remove('show'), 500);
     }
 
     // =============================================

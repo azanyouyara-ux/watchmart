@@ -337,7 +337,8 @@ function showToast(msg) {
   if (!toast) return;
   toast.textContent = msg;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
+  clearTimeout(toast._toastTimer);
+  toast._toastTimer = setTimeout(() => toast.classList.remove('show'), 500);
 }
 
 loadProducts();
