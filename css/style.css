@@ -419,7 +419,7 @@ body {
 /* ===== TOAST NOTIFICATION ===== */
 .toast {
   position: fixed;
-  bottom: 25px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--primary);
