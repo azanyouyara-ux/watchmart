@@ -424,8 +424,8 @@ body {
   transform: translateX(-50%);
   background: var(--primary);
   color: var(--accent);
-  padding: 14px 28px;
-  border-radius: 30px;
+  padding: 7px 14px;
+  border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 600;
   z-index: 9999;
